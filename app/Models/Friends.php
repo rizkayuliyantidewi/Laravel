@@ -7,5 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Friends extends Model
 {
+
+
+
+
     use HasFactory;
+    protected $guarded = ['mana'];
+    
+    
 }
+
+
+
+
+
+
+
+
+
+
