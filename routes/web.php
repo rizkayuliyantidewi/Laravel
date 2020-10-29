@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\cobaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,11 +12,14 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-use App\Http\Controllers\CobaController;
 
-Route::get('',[CobaController::class, 'index']);
-Route::get('/friends', [CobaController::class, 'index']);
+Route::get('', [cobaController::class, 'index']);
+Route::get('/friends', [cobaController::class, 'index']);
 
-Route::get('/friends/create', [CobaController::class, 'create']);
+Route::get('/friends/create', [cobaController::class, 'create']);
 
-Route::post('/friends', [CobaController::class, 'store']);
+Route::post('/friends', [cobaController::class, 'store']);
+Route::get('/friends/{id}', [cobaController::class, 'show']);
+Route::get('/friends/{id}/edit', [cobaController::class, 'edit']);
+Route::delete('/friends/{id}', [cobaController::class, 'destroy']);
+
