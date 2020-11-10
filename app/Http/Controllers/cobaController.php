@@ -29,7 +29,7 @@ class cobaController extends Controller
         $request->validate([
             'nama' => 'required|unique:friends|max:225',
             'no_tlp' =>'required|numeric',
-            'alamat' =>'required',
+            'alamat' =>'nullable',
         ]);
 
         $friends = new Friends;
@@ -58,7 +58,7 @@ class cobaController extends Controller
         $request->validate([
             'nama' => 'required|unique:friends|max:225',
             'no_tlp' =>'required|numeric',
-            'alamat' =>'required',
+            'alamat' =>'nullable',
         ]);
       Friends::find($id)->update([
           'nama' => $request->nama,
