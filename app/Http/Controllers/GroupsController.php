@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Groups;
+use App\Models\Friends;
 use Illuminate\Http\Request;
 
 class GroupsController extends Controller
@@ -106,4 +107,32 @@ class GroupsController extends Controller
         Groups::find($id)->delete();
         return redirect('/groups');
     }
+    public function addmember($id)
+    {
+        $friends = Friends::where('groups_id','=',0)->get(); 
+        $group = Groups::where('id', $id) -> first();
+        return view('groups.addmember', ['group' => $groups, 'friend' => $friend]);
+
+      
+    }
+    public function updateaddmember(Request $request, $id)
+    {
+        $friend= Friends::where('id', $request->friend_id)->first();
+        Friends::find($friend->id)->update([
+            'groups_id' => $id
+        ]);
+        return redirect('/groups/addmember/' . $id);
+    }
+
+    public function deleteaddmember(Request $request, $id)
+    {
+       // dd($id);
+      Friends::find($id)->update([
+          'groups_id' => 0
+        
+      ]);
+        return redirect('/groups');
+    }
+    
+
 }
