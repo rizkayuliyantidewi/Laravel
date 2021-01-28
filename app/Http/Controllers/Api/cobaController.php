@@ -35,6 +35,7 @@ class cobaController extends Controller
             'nama' => 'required|unique:friends|max:225',
             'no_tlp' =>'required|numeric',
             'alamat' =>'required',
+            'groups_id' => 'required'
            
         ]);
 
@@ -43,6 +44,7 @@ class cobaController extends Controller
             'no_tlp' => $request->no_tlp,
             'alamat' => $request->alamat,
             'groups_id' => $request->groups_id
+            
         ]);
 
         if ($friends) {
@@ -69,9 +71,16 @@ class cobaController extends Controller
      */
     public function show($id)
     {
-        //
+        $friend = Friends::where('id', $id)->first();
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail data teman',
+            'data'    => $friend
+        ], 200);
+    
     }
 
+   
     /**
      * Update the specified resource in storage.
      *
@@ -79,7 +88,29 @@ class cobaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-  
+    public function update(Request $request,$id)
+    {
+        $request->validate([
+            'nama' => 'required|unique:friends|max:255',
+            'no_tlp' => 'required|numeric',
+            'alamat' => 'required',
+            'groups_id' => 'required'
+            
+        ]);
+        $f = Friends::find($id)->update([
+            'nama' => $request->nama,
+            'no_tlp' => $request->no_tlp,
+            'alamat' => $request->alamat,
+            'groups_id' => 'required'
+            
+        ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Post Updated',
+            'data'  => $f
+        ], 200);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -88,6 +119,13 @@ class cobaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $cek = Friends::find($id)->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Post Updated',
+            'data' => $cek
+        ], 200);
     }
 }
+
+
