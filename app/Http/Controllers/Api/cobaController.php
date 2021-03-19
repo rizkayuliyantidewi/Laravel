@@ -39,7 +39,7 @@ class cobaController extends Controller
            
         ]);
 
-        $friends = Friends::create([
+        $f = Friends::create([
             'nama' => $request->nama,
             'no_tlp' => $request->no_tlp,
             'alamat' => $request->alamat,
@@ -90,20 +90,14 @@ class cobaController extends Controller
      */
     public function update(Request $request,$id)
     {
-        $request->validate([
-            'nama' => 'required|unique:friends|max:255',
-            'no_tlp' => 'required|numeric',
-            'alamat' => 'required',
-            'groups_id' => 'required'
-            
-        ]);
-        $f = Friends::find($id)->update([
+        $friends = Friends::find($id)->update([
             'nama' => $request->nama,
             'no_tlp' => $request->no_tlp,
             'alamat' => $request->alamat,
-            'groups_id' => 'required'
+            'groups_id' => $request->groups_id
             
         ]);
+    
         return response()->json([
             'success' => true,
             'message' => 'Post Updated',
@@ -119,10 +113,10 @@ class cobaController extends Controller
      */
     public function destroy($id)
     {
-        $cek = Friends::find($id)->delete();
+        $friend = Friends::find($id)->delete();
         return response()->json([
             'success' => true,
-            'message' => 'Post Updated',
+            'message' => 'Data teman berhasil di hapus',
             'data' => $cek
         ], 200);
     }
