@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
+
 use App\Models\Groups;
-use App\Models\Friends;
+use\App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class GroupsController extends Controller
@@ -15,19 +16,21 @@ class GroupsController extends Controller
     public function index()
     {
         $groups= Groups::orderBy('id', 'desc')->paginate(3);
-        return view('groups.index', compact('groups'));
-
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar data grup teman',
+            'data'    => $friends
+        ], 200);
     }
+
+    
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        return view('groups.create');
-    }
+   
 
     /**
      * Store a newly created resource in storage.
@@ -42,17 +45,27 @@ class GroupsController extends Controller
             'description' =>'required',
             
         ]);
-
-        $groups = new Groups;
-
-        $groups->name = $request->name;
-        $groups->description = $request->description;
+        $groups = Groups::create([
+            'name' => $request->name,
+            'description' => $request ->description
+        ]);
       
-
-        $groups->save();
-
-        return redirect('/groups');
+    if($groups)
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'Teman berhasil ditambahkan',
+            'data'    => $groups
+        ], 200);
+    }else{
+        return response()->json([
+            'success' => true,
+            'message' => 'Teman gagal di tambahkan',
+            'data'    => $groupss
+        ], 409);
     }
+    }
+    
 
     /**
      * Display the specified resource.
@@ -63,8 +76,13 @@ class GroupsController extends Controller
     public function show($id)
     {
         $group = Groups::where('id', $id) ->first();
-        return view('groups.show', ['group' => $group]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail data teman',
+            'data'    => $groups
+        ], 200);
     }
+    
     
     /**
      * Show the form for editing the specified resource.
@@ -88,12 +106,17 @@ class GroupsController extends Controller
     public function update(Request $request, $id)
     {
        
-      groups::find($id)->update([
-          'name' => $request->name,
-          'description' => $request->description
+      $group = Groups::find($id)->update([
+          'name' => 'required|unique:friends|max:225',
+          'description' => 'required'
       ]);
-        return redirect('/groups');
-    }
+      return response()->json([
+        'success' => true,
+        'message' => 'Data berhasil di rubah',
+        'data'    => $groups
+    ], 200);
+}
+    
     
 
     /**
@@ -104,33 +127,12 @@ class GroupsController extends Controller
      */
     public function destroy($id)
     {
-        Groups::find($id)->delete();
-        return redirect('/groups');
+        $group = Groups::find($id)->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'data berhasil di hapus',
+            'data'    => $group
+        ], 200);
     }
-    public function addmember($id)
-    {
-        $friends = Friends::where('groups_id','=',0)->get(); 
-        $group = Groups::where('id', $id) -> first();
-        return view('groups.addmember', ['group' => $groups, 'friend' => $friend]);
-
-      
     }
-    public function updateaddmember(Request $request, $id)
-    {
-        $friend= Friends::where('id', $request->friend_id)->first();
-        Friends::find($friend->id)->update([
-            'groups_id' => $id
-        ]);
-        return redirect('/groups/addmember/' . $id);
-    }
-
-    public function deleteaddmember(Request $request, $id)
-    {
-       // dd($id);
-      Friends::find($id)->update([
-          'groups_id' => 0
-        
-      ]); 
-        return redirect('/groups');
-    }
-}
+   
